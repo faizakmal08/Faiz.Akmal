@@ -1,2 +1,2 @@
 # Faiz.Akmal
-portofolio Faiz Akmal menggunkan tailwind css
+Faiz Akmal Portofolio & Biodata
