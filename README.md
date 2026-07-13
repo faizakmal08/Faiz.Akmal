@@ -138,6 +138,13 @@ graph TD
 
 ---
 
+## 🔮 Future Development: Arsitektur Multi-Database (Multi-Tenant)
+Ke depannya, aplikasi ini dirancang untuk beralih menggunakan **Arsitektur Multi-Database**. Rencana pembaruan ini meliputi:
+- **Database Mandiri per Klien:** Setiap klien (perusahaan) yang berlangganan akan memiliki *database* (skema) mereka masing-masing secara terpisah.
+- **Keamanan & Isolasi Data Maksimal:** Mencegah tercampurnya data transaksi kepabeanan (dokumen BC, HS Code, Entitas) antarklien, sehingga privasi dan integritas data terjamin.
+- **Skalabilitas & Performa:** Memudahkan proses pencadangan (*backup*), pemulihan (*restore*), serta menjaga *query* tetap ringan karena volume data di satu *database* dibatasi hanya untuk satu entitas klien.
+---
+
 ## 🚀 Instalasi & Development
 
 Jalankan perintah berikut untuk mengoperasikan aplikasi dalam mode *development*:
