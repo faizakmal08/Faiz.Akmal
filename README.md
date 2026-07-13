@@ -9,8 +9,8 @@ Aplikasi ini ditujukan untuk mempermudah perusahaan (Eksportir / Importir / Pusa
 ## 🎯 Tujuan Pembuatan
 1. **Efisiensi:** Mengurangi penginputan manual berulang dengan sistem *auto-populate* dari data master referensi Bea Cukai.
 2. **Akurasi Pabean:** Meminimalisir *human-error* melalui fitur kalkulasi pungutan otomatis (Bea Masuk, PPN, PPh, dll) berdasarkan kurs, tarif, dan status/fasilitas barang (Dibayar, Dibebaskan, Ditangguhkan, dll).
-3. **Kepatuhan (Compliance):** Memastikan format payload (JSON) sesuai standar skema CEISA (v.0.5.29) sebelum di-*submit* via fitur pra-validasi dan generator JSON.
-4. **Sentralisasi:** Menggabungkan pengelolaan berbagai form dokumen, rincian logistik (kemasan, kontainer, pengangkut), dan rincian barang (termasuk daftar bahan baku) dalam satu antarmuka modern.
+3. **Kepatuhan (Compliance):** Memastikan format payload (JSON) sesuai standar skema CEISA 4.0 sebelum di-*submit* via fitur pra-validasi dan generator JSON.
+4. **Kecepatan** Memastikan Semua Program Dioptimasi Secepat Mungkin jika memilki banyak data perhari
 
 ---
 
