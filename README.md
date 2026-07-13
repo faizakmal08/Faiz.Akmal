@@ -92,6 +92,10 @@ Fitur inspeksi JSON (*Cek JSON*) untuk melihat pra-tinjau stuktur data persis ya
 ## 🔄 Flowchart Aplikasi (Alur Kerja Pengguna)
 
 ```mermaid
+---
+config:
+  layout: elk
+---
 graph TD
     A[Mulai Pembuatan/Edit Dokumen BC] --> B[Sistem Cek Cache Referensi]
     B -->|Tersedia| C[Load Form & Dropdown dari Cache]
@@ -116,9 +120,23 @@ graph TD
     M -->|Sudah| O[Generate Struktur JSON H2H]
     
     O --> P[Klik Simpan & Kirim]
-    P --> Q[Execute: store.php / update.php (Save to Database)]
-    Q --> R[Execute: send.php (POST ke Server CEISA)]
+    P --> Q[Execute: store.php / update.php<br/>Save to Database]
+    Q --> R[Execute: send.php<br/>POST ke Server CEISA]
     R --> S[Sistem Menunggu Respons/Status CEISA]
+    
+    classDef startEnd stroke:#4ade80,fill:#f0fdf4
+    classDef process stroke:#38bdf8,fill:#f0f9ff
+    classDef decision stroke:#facc15,fill:#fefce8
+    classDef error stroke:#f87171,fill:#fef2f2
+    classDef database stroke:#a78bfa,fill:#f5f3ff
+    classDef external stroke:#fb923c,fill:#fff7ed
+    
+    class A startEnd
+    class B,C,D,E,F,H,I,J,K,L,O process
+    class G,M decision
+    class N error
+    class Q database
+    class R,S external
 ```
 
 ---
