@@ -9,8 +9,7 @@ Aplikasi ini ditujukan untuk mempermudah perusahaan (Eksportir / Importir / Pusa
 ## 🎯 Tujuan Pembuatan
 1. **Efisiensi:** Mengurangi penginputan manual berulang dengan sistem *auto-populate* dari data master referensi Bea Cukai.
 2. **Akurasi Pabean:** Meminimalisir *human-error* melalui fitur kalkulasi pungutan otomatis (Bea Masuk, PPN, PPh, dll) berdasarkan kurs, tarif, dan status/fasilitas barang (Dibayar, Dibebaskan, Ditangguhkan, dll).
-3. **Kepatuhan (Compliance):** Memastikan format payload (JSON) sesuai standar skema CEISA 4.0 sebelum di-*submit* via fitur pra-validasi dan generator JSON.
-4. **Kecepatan** Memastikan Semua Program Dioptimasi Secepat Mungkin jika memilki banyak data perhari
+3. **Kecepatan:** Memastikan Semua Program Dioptimasi Secepat Mungkin jika memilki banyak data perhari
 
 ---
 
@@ -69,23 +68,21 @@ Proyek ini mengadopsi pendekatan arsitektur spesifik: **"Procedural in Laravel"*
 
 ---
 
-## ✨ Fitur Utama (Berdasarkan Modul BC)
+## ✨ Kelebihan & Fitur Utama (Berdasarkan Modul BC)
 
-### 1. Form Input Berjenjang (Tab Navigation)
-Pembuatan dokumen sangat kompleks sehingga dipecah menjadi beberapa tab: **Header**, **Entitas** (Pengusaha/Importir/Pemasok/Pemilik), **Dokumen**, **Pengangkut**, **Kemasan & Kontainer**, **Transaksi**, **Barang & Bahan Baku**, **Pungutan**, dan **Pernyataan**.
+Sistem EsikatCeisa didesain untuk memberikan fleksibilitas dan otomasi tingkat tinggi dengan sejumlah kelebihan utama berikut:
 
-### 2. Modul Barang Terintegrasi
-- Input Spesifikasi Khusus (kode spesifik untuk jenis barang tertentu).
-- Terhubung langsung dengan formulir khusus lampiran **Bahan Baku Impor & Lokal** menggunakan antarmuka *Offcanvas* (side-panel).
+### 1. Smart Entity Reference (Referensi Entitas Langsung)
+Pengguna tidak perlu lagi melakukan *input* entitas (Importir, Pemasok, Pemilik, dll) secara manual dari awal setiap kali membuat dokumen. Sistem telah menggunakan skema *referensi entitas* di mana identitas pihak yang terlibat langsung ditarik dan diisi ke dalam form sesuai dengan spesifikasi form (misalnya per BC 2.5 atau BC 2.7) sehingga menghemat waktu secara drastis.
 
-### 3. Modul Auto-Pungutan (Tarif & Pajak)
-Otomatis mengkalkulasi Nilai Pabean, mendistribusikan BM, BMAD, BMTP, PPN, PPnBM, dan PPh ke dalam matriks status sesuai kode fasilitas tarif barang (Misal: 1=Dibayar, 2=Ditanggung Pemerintah, 3=Ditangguhkan, 5=Dibebaskan, 6=Tidak Dipungut, 7=Sudah Dilunasi).
+### 2. Live JSON Inspector & Pemisahan Environtment
+Sistem dilengkapi dengan fitur **Cek JSON** langsung dari antarmuka pengguna, yang amat mempermudah para *developer* untuk melihat secara utuh (*development debug*) *JSON payload* yang dikirimkan. Alur pengiriman API ini juga sudah secara rapi dipisah antara mode *Development* (Dev) dan *Production* (Live) melalui pengaturan di konfigurasi `.env`.
 
-### 4. Manajemen Entitas Dinamis
-Setiap kode entitas (Pengusaha TPB, Pemasok, Pembeli, dll) di-mapping spesifik dengan isian yang disesuaikan (nomor identitas, NITKU, alamat, status NIB/API) lalu digabungkan saat JSON dibentuk.
+### 3. Penambahan HS Code Terintegrasi
+Memudahkan operasional dengan kemampuan pencarian dan penambahan klasifikasi tarif dan pos tarif **HS Code** yang fleksibel secara langsung di dalam dokumen barang.
 
-### 5. Live JSON Inspector
-Fitur inspeksi JSON (*Cek JSON*) untuk melihat pra-tinjau stuktur data persis yang akan dikirimkan ke Bea Cukai secara *real-time* saat sedang mengisi form.
+### 4. Ekosistem Terhubung (Integrasi EsikatERP)
+Bagi perusahaan yang juga berlangganan produk **EsikatERP**, modul kepabeanan ini sudah dirancang agar dapat **terhubung langsung dengan sistem ERP tersebut**. Ini memberikan keuntungan masif karena sistem dapat dengan mudah melakukan penarikan data transaksi yang riil (*real-time*) langsung dari sistem **IT Inventory**, menyatukan data operasional dan pabean dalam satu alur yang utuh.
 
 ---
 
@@ -117,7 +114,7 @@ graph TD
     L --> M{Atribut Mandatory Terisi?}
     M -->|Belum| N[Tampilkan Notifikasi Error]
     N --> E
-    M -->|Sudah| O[Generate Struktur JSON H2H]
+    M -->|Sudah| O[Struktur Json Sudah Lengkap Dapat Dikirim Ceisa]
     
     O --> P[Klik Simpan & Kirim]
     P --> Q[Execute: store.php / update.php<br/>Save to Database]
