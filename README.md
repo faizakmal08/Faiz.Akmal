@@ -17,7 +17,7 @@ Aplikasi ini ditujukan untuk mempermudah perusahaan (Eksportir / Importir / Pusa
 ## 💻 Tech Stack (Teknologi yang Digunakan)
 
 ### **Backend & Database**
-- **Framework Utama**: [Laravel 11.x](https://laravel.com/) (menggunakan PHP 8.3+)
+- **Framework Utama**: [Laravel 13.8](https://laravel.com/) (menggunakan PHP 8.3+)
 - **Database**: MariaDB / MySQL. 
   - *Catatan:* Proses akses data transaksi dan master CEISA menggunakan **PDO & Query Builder** secara langsung (tanpa Eloquent ORM) demi fleksibilitas kueri dan optimasi kecepatan pengolahan struktur dokumen yang masif.
 - **PDF Generator**: `mpdf/mpdf` (digunakan saat mencetak draf/respon dokumen dari sistem CEISA).
