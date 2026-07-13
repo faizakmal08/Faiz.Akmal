@@ -39,11 +39,33 @@ Aplikasi ini ditujukan untuk mempermudah perusahaan (Eksportir / Importir / Pusa
 
 Proyek ini mengadopsi pendekatan arsitektur spesifik: **"Procedural in Laravel"** pada modul CEISA. Hal ini berarti alur *request/routing* mengarah langsung ke eksekusi skrip `.php` fungsional di dalam direktori `app/Http/Controllers/Ceisa/` (seperti `store.php`, `update.php`, `get_detail.php`, `send.php`).
 
-### Flow Arsitektur Singkat:
-- **View Layer**: Menggunakan modular partials Blade untuk membentuk *Single-page-like form* (berpindah antar tab Header, Entitas, Barang, Pungutan tanpa *reload*).
-- **Client-Side State (`bc25.js`, `bc27.js`, dll)**: Menjalankan "Business Logic" di sisi peramban pengguna—mulai dari menghitung Pabean (FOB, CIF, PDRI) hingga merakit draf *JSON Payload*.
-- **API & Caching**: Data referensi yang masif ditarik dari *endpoint* internal dan dicache ke `localStorage` (sehingga *dropdown* langsung siap tanpa membebani server terus menerus).
-- **Gateway Script (`send.php`)**: Berfungsi sebagai *middleware* untuk merakit *final request*, memuat token H2H, dan mengirimkannya ke API CEISA.
+### Penjelasan Lengkap Alur Arsitektur & Berkas yang Terlibat:
+
+1. **Routing & Render Tampilan (View Layer)**
+   - Saat pengguna membuka sebuah form (misal: Pembuatan/Edit BC 2.7), rute Laravel akan mengembalikan *View* dari folder `resources/views/ceisa/tpb/bc27/form.blade.php`.
+   - File `form.blade.php` ini bertindak sebagai kerangka utama. Di dalamnya, skrip melakukan *include* potongan-potongan UI yang disebut **Partials** dari folder `resources/views/ceisa/tpb/bc27/partials/` (seperti `form-header.blade.php`, `form-entitas.blade.php`, `form-barang.blade.php`, `form-pungutan.blade.php`, dan `offcanvas-bahan-baku.blade.php`).
+
+2. **Pengambilan Data (Fetch Detail - Khusus Mode Edit)**
+   - Jika dokumen sedang diedit, sistem akan mengeksekusi berkas **`app/Http/Controllers/Ceisa/TPB/BC27/get_detail.php`** (atau modul BC yang bersangkutan).
+   - Skrip `get_detail.php` ini menggunakan PDO/Query Builder untuk melakukan *query* kompleks ke *database* MySQL guna menarik data dari tabel-tabel kepabeanan (seperti `rheader`, `rentitas`, `rbarang`, `rkemasan`, `rkontainer`, dll).
+   - Seluruh data yang didapatkan tersebut disuntikkan (*injected*) ke dalam kerangka HTML menjadi variabel Javascript Global (misalnya: `window.bc27_header_data`, `window.bc27_barang`, `window.bc27_entitas`).
+
+3. **Logika Client-Side & Interaktivitas UI (Javascript Layer)**
+   - Peramban kemudian memuat berkas pusat kendali Javascript: **`public/js/bc27.js`** (untuk BC 2.7).
+   - File JS inilah yang bertugas mengolah variabel *global* tadi untuk mengisi isian (input) di formulir secara otomatis.
+   - Skrip ini juga berfungsi menarik **Data Referensi Master** (Valuta, Pelabuhan, Identitas) melalui API internal lalu menyimpannya ke memori peramban (`localStorage`) agar pilihan *dropdown Select2* termuat instan.
+   - Di sini pula "Otak Kalkulasi" bekerja. Fungsi-fungsi matematika (menghitung nilai FOB, CIF, PDRI, distribusi fasilitas pembebasan) tereksekusi *real-time* di komputer klien tanpa harus me-*reload* halaman.
+
+4. **Penyimpanan Draf ke Database (Store / Update Layer)**
+   - Begitu pengguna mengeklik tombol "Simpan", fungsi di `bc27.js` mengemas keseluruhan data di formulir menjadi sebuah muatan data dan melakukan *request HTTP POST* (AJAX) ke *backend*.
+   - Permintaan ini diproses oleh berkas **`app/Http/Controllers/Ceisa/TPB/BC27/update.php`** (jika mengedit) atau **`store.php`** (jika dokumen baru).
+   - Skrip fungsional PHP ini membongkar kiriman tersebut, memetakannya, lalu melakukan operasi *INSERT / UPDATE* langsung ke tabel-tabel terkait di *database* (`rheader`, `rbarang`, `rbarang_bahan_baku`, dsb).
+
+5. **Pengiriman Host-to-Host CEISA (API Gateway)**
+   - Apabila instruksi yang dipilih adalah aksi submit ("Kirim Final" atau "Kirim Draft"), sistem memanggil berkas **`app/Http/Controllers/Ceisa/TPB/BC27/send.php`**.
+   - Berkas `send.php` berfungsi sebagai gerbang/jembatan akhir. Skrip ini menarik seluruh draf di basis data, merekonstruksinya menjadi **Struktur JSON Payload v0.5.29** sesuai pakem H2H Bea Cukai, lalu menghasilkan/menyuntikkan Token Otorisasi.
+   - Melalui cURL (*HTTP Request*), JSON dikirim ke Endpoint/API DJBC. 
+   - Respons Bea Cukai direkam dalam basis data, di mana berkas pelengkap seperti **`status.php`** akan rutin dipanggil untuk memantau perubahan dokumen (misal: proses divalidasi, direject, atau disetujui).
 
 ---
 
